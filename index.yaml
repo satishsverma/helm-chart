@@ -4,8 +4,33 @@ entries:
   - annotations:
       category: Infrastructure
     apiVersion: v1
+    appVersion: 2.6.1
+    created: "2022-01-27T11:20:04.392073159Z"
+    description: Apache Kafka is a distributed streaming platform. ddd
+    digest: 4f618dd492d20538a21f1b7e6af2d1278314b16a1b55a095ad9f2970664de48a
+    home: https://github.com/bitnami/charts/tree/master/bitnami/kafka
+    icon: https://bitnami.com/assets/stacks/kafka/img/kafka-stack-110x117.png
+    keywords:
+    - kafka
+    - streaming
+    - zookeeper
+    - producer
+    - consumer
+    maintainers:
+    - email: containers@bitnami.com
+      name: Bitnami
+    name: kafka
+    sources:
+    - https://github.com/bitnami/bitnami-docker-kafka
+    - https://kafka.apache.org/
+    urls:
+    - https://satishsverma.github.io/helm-chart/kafka-11.8.9.tgz
+    version: 11.8.9
+  - annotations:
+      category: Infrastructure
+    apiVersion: v1
     appVersion: 2.6.0
-    created: "2022-01-27T11:06:22.563165988Z"
+    created: "2022-01-27T11:20:04.38751359Z"
     description: Apache Kafka is a distributed streaming platform. dd
     digest: d1b8b4d4c58c1364564fea3e90e0f32cb08d71b8c8a7334765188d3be3332c3e
     home: https://github.com/bitnami/charts/tree/master/bitnami/kafka
@@ -26,4 +51,4 @@ entries:
     urls:
     - https://satishsverma.github.io/helm-chart/kafka-11.8.8.tgz
     version: 11.8.8
-generated: "2022-01-27T11:06:22.558584175Z"
+generated: "2022-01-27T11:20:04.384092564Z"
