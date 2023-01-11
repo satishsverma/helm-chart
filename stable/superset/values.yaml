@@ -485,3 +485,103 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+custom_security_manager: |-
+  import os
+  import logging
+  import jwt
+  import json
+  import secrets
+  from flask import request
+  from flask import render_template
+  from flask_appbuilder.security.views import AuthDBView
+  from flask_appbuilder.security.views import expose
+  from flask_login import login_user, logout_user
+  from superset.security import SupersetSecurityManager
+
+  class CustomAuthDBView(AuthDBView):
+
+      def getSub(self, jwt_payload):
+          if 'sub' in jwt_payload:
+              return jwt_payload.get('sub')
+          else:
+              return str('email_' + jwt_payload.get('preferred_username'))
+
+      def getEmail(self, jwt_payload):
+          if 'sub' in jwt_payload:
+              return jwt_payload.get('email')
+          else:
+              return str('email_' + jwt_payload.get('email'))
+
+      def getFirstName(self, jwt_payload):
+          if 'given_name' in jwt_payload:
+              return jwt_payload.get('given_name')
+          else:
+              return jwt_payload.get('name')
+
+      def getLastName(self, jwt_payload):
+          if 'family_name' in jwt_payload:
+              return jwt_payload.get('family_name')
+          else:
+              return jwt_payload.get('name')
+
+      @expose('/user_register/', methods=['GET'])
+      def user_register(self):
+          token = request.args.get('token')
+          if token is not None:
+              jwt_payload = jwt.decode(token, '', verify=False)
+              user_name = self.getSub(jwt_payload)
+              first_name = self.getFirstName(jwt_payload)
+              last_name = self.getLastName(jwt_payload)
+              email = self.getEmail(jwt_payload)
+              default_admins = os.environ.get("DEFAULT_ADMIN")
+              grant_role = 'Admin'
+              if default_admins == "ALL":
+                  grant_role = 'Admin'
+              else:
+                  adminEmailsList = default_admins.split(";")
+                  if email in adminEmailsList:
+                      grant_role = 'Admin'
+                  else:
+                      grant_role = 'Public'
+              user = self.appbuilder.sm.find_user(username=user_name)
+              if not user:
+                  user = self.appbuilder.sm.add_user(
+                      username=user_name,
+                      first_name=first_name,
+                      last_name=last_name,
+                      password=secrets.token_hex(20),
+                      email=email,
+                      role=self.appbuilder.sm.find_role(grant_role))
+                  return 'New user registered successfully', 200
+              else:
+                  return 'User already exists', 210
+          else:
+              return 'Invalid token', 401
+
+      @expose('/login/', methods=['GET', 'POST'])
+      def login(self):
+          token = request.args.get('token')
+          if token is not None:
+              jwt_payload = jwt.decode(token, '', verify=False)
+              user_name = self.getSub(jwt_payload)
+              user = self.appbuilder.sm.find_user(username=user_name)
+              if user is not None:
+                  login_user(user, remember=False)
+                  return f'<script src="/static/blotout.js?v=2"></script><br> {render_template("superset/authentication.json")}', 200
+              else:
+                  return 'User not registered', 210
+          else:
+              return super(CustomAuthDBView, self).login()
+
+      @expose('/session_expire/', methods=['GET'])
+      def sso_logout(self):
+          logout_user()
+          return 'User Logged out successfully', 200
+
+
+  class CustomSecurityManager(SupersetSecurityManager):
+      authdbview = CustomAuthDBView
+
+      def __init__(self, appbuilder):
+          super(CustomSecurityManager, self).__init__(appbuilder)
