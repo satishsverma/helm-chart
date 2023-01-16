@@ -69,7 +69,7 @@ from cachelib.redis import RedisCache
 
 from custom_security_manager import CustomSecurityManager
 CUSTOM_SECURITY_MANAGER = CustomSecurityManager
-# from superset.typing import CacheConfig
+from superset.typing import CacheConfig
 
 REDIS_CELERY_DB = os.environ.get("REDIS_CELERY_DB", 4)
 REDIS_RESULTS_DB = os.environ.get("REDIS_RESULTS_DB", 5)
