@@ -131,7 +131,7 @@ THUMBNAIL_CACHE_CONFIG: CacheConfig = {
     'CACHE_DEFAULT_TIMEOUT': 15*60,
     'CACHE_KEY_PREFIX': 'thumbnail_',
     'CACHE_NO_NULL_WARNING': True,
-    'CACHE_REDIS_URL': f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/{REDIS_CACHE_DB}"
+    'CACHE_REDIS_URL': f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/1"
 }
 
 WEBDRIVER_TYPE= "chrome"
