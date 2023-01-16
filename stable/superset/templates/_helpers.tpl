@@ -64,6 +64,9 @@ Create chart name and version as used by the chart label.
 import os
 from cachelib.redis import RedisCache
 
+from custom_security_manager import CustomSecurityManager
+CUSTOM_SECURITY_MANAGER = CustomSecurityManager
+
 def env(key, default=None):
     return os.getenv(key, default)
 
