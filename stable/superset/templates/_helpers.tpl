@@ -62,10 +62,18 @@ Create chart name and version as used by the chart label.
 
 {{- define "superset-config" }}
 import os
+import flask
+from flask import request, g
+
 from cachelib.redis import RedisCache
 
 from custom_security_manager import CustomSecurityManager
 CUSTOM_SECURITY_MANAGER = CustomSecurityManager
+from superset.typing import CacheConfig
+
+REDIS_CELERY_DB = os.environ.get("REDIS_CELERY_DB", 4)
+REDIS_RESULTS_DB = os.environ.get("REDIS_RESULTS_DB", 5)
+REDIS_CACHE_DB = os.environ.get("REDIS_CACHE_DB", 6)
 
 FEATURE_FLAGS = {
     "THUMBNAILS" : True,
@@ -76,6 +84,9 @@ FEATURE_FLAGS = {
     "DASHBOARD_CACHE": True,
     "ENABLE_TEMPLATE_PROCESSING": False,
 }
+
+SUPERSET_WEBSERVER_TIMEOUT = 120
+SQLLAB_TIMEOUT = 60
 
 def env(key, default=None):
     return os.getenv(key, default)
@@ -116,6 +127,7 @@ class CeleryConfig(object):
 {{- end }}
 
 CELERY_CONFIG = CeleryConfig
+
 RESULTS_BACKEND = RedisCache(
       host=env('REDIS_HOST'),
 {{- if .Values.supersetNode.connections.redis_password }}
