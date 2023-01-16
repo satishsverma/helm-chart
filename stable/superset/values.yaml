@@ -529,7 +529,7 @@ custom_security_manager: |-
       def user_register(self):
           token = request.args.get('token')
           if token is not None:
-              jwt_payload = jwt.decode(token, '', verify=False)
+              jwt_payload = jwt.decode(token, options={"verify_signature": False})
               user_name = self.getSub(jwt_payload)
               first_name = self.getFirstName(jwt_payload)
               last_name = self.getLastName(jwt_payload)
@@ -563,7 +563,7 @@ custom_security_manager: |-
       def login(self):
           token = request.args.get('token')
           if token is not None:
-              jwt_payload = jwt.decode(token, '', verify=False)
+              jwt_payload = jwt.decode(token, options={"verify_signature": False})
               user_name = self.getSub(jwt_payload)
               user = self.appbuilder.sm.find_user(username=user_name)
               if user is not None:
