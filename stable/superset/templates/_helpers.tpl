@@ -66,7 +66,6 @@ from cachelib.redis import RedisCache
 
 from custom_security_manager import CustomSecurityManager
 CUSTOM_SECURITY_MANAGER = CustomSecurityManager
-from superset.typing import CacheConfig
 
 FEATURE_FLAGS = {
     "THUMBNAILS" : True,
