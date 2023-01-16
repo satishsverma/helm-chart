@@ -66,6 +66,17 @@ from cachelib.redis import RedisCache
 
 from custom_security_manager import CustomSecurityManager
 CUSTOM_SECURITY_MANAGER = CustomSecurityManager
+from superset.typing import CacheConfig
+
+FEATURE_FLAGS = {
+    "THUMBNAILS" : True,
+    "ALERT_REPORTS": True,
+    "LISTVIEWS_DEFAULT_CARD_VIEW" : True,
+    "GLOBAL_ASYNC_QUERIES" : False,
+    "CLIENT_CACHE": False,
+    "DASHBOARD_CACHE": True,
+    "ENABLE_TEMPLATE_PROCESSING": False,
+}
 
 def env(key, default=None):
     return os.getenv(key, default)
